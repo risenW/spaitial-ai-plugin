@@ -47,7 +47,7 @@ The plugin declares one MCP server in `.mcp.json`:
 }
 ```
 
-The hosted server is **stateless and holds no credentials** — it forwards your key to `api.spaitial.ai` on each request, and you're billed to your own SpAItial account. It exposes these tools: `list_models`, `create_world`, `get_world_status`, `get_world`, `list_world_requests`, `get_splat_download_url`, `get_panorama_download_url`, `update_world`, `cancel_world`, `start_mesh_export`, `get_mesh_export`.
+With header clients (Code/Desktop/Cursor) the hosted server is **stateless and holds no credentials** — it forwards your key to `api.spaitial.ai` on each request, and you're billed to your own SpAItial account. With claude.ai web/mobile it uses OAuth and stores your key **encrypted** (retrievable only via your issued token). Either way it exposes these tools: `list_models`, `create_world`, `get_world_status`, `get_world`, `list_world_requests`, `get_splat_download_url`, `get_panorama_download_url`, `update_world`, `cancel_world`, `start_mesh_export`, `get_mesh_export`.
 
 Because the connection runs over native remote MCP (not a local process), it works in sandboxed environments like Cowork without any network workaround.
 
@@ -59,16 +59,19 @@ Create an account and an API key at the [SpAItial developers portal](https://dev
 
 ### 2. Provide the key (once, not in chat)
 
-Enable the **spaitial** connector that ships with this plugin and enter your key in its configuration. Concretely, the header `X-Spaitial-Api-Key` is wired to `${SPAITIAL_API_KEY}`:
+How you hand over the key depends on the client, because the hosted server supports **two auth modes** on the same endpoint:
 
-- **Claude Desktop / Cowork:** set the key in the connector's config field. Treat it as a secret — it's stored by Claude, not written into the chat or any generated file.
-- **Claude Code / terminal:** export it in your environment so `${SPAITIAL_API_KEY}` resolves:
+- **Claude Code / Claude Desktop / Cursor (header / BYOK):** the header `X-Spaitial-Api-Key` is wired to `${SPAITIAL_API_KEY}`. Set the key in the connector's config field (Desktop) or export it (Code):
 
   ```bash
   export SPAITIAL_API_KEY="spt_live_your_key_here"
   ```
 
-If a tool call returns `401 UNAUTHORIZED`, the key is missing or wrong — re-check the connector config.
+  These clients send the key as a header and bypass OAuth entirely.
+
+- **claude.ai web + mobile (OAuth login):** these surfaces only support OAuth connectors — they can't attach a custom header. So when you click **Connect**, you'll be redirected to a SpAItial consent screen; **paste your `spt_…` key there once**. It's validated, then stored encrypted by the connector and sent to `api.spaitial.ai` on each call — never shown in chat.
+
+If a tool call returns `401 UNAUTHORIZED`, the key is missing or wrong — re-check the connector config (header clients) or reconnect and re-enter the key (web/mobile).
 
 ## Usage
 
@@ -88,4 +91,4 @@ Just describe what you want in plain language:
 
 ## Privacy & distribution
 
-Worlds are private by default; visibility only changes when you explicitly ask. The hosted MCP server stores no key — it forwards yours per request over HTTPS. Your key lives in Claude's connector config, never in generated files or the chat. If you'd prefer users *log in* rather than paste a key, the server can be extended with OAuth (see the server's README).
+Worlds are private by default; visibility only changes when you explicitly ask. With header clients the hosted MCP server stores no key — it forwards yours per request over HTTPS, and your key lives in Claude's connector config, never in generated files or the chat. With claude.ai web/mobile, OAuth stores your key encrypted-at-rest (decryptable only with your access token) and forwards it per request. In both cases the key is never written into generated files or the chat.
