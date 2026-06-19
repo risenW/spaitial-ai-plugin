@@ -1,6 +1,6 @@
 # SpAItial AI
 
-Generate explorable 3D worlds (Gaussian splats) from a text prompt, an image, or a 360° panorama using the [SpAItial](https://spaitial.ai) API — then download them, export a mesh, manage your library, and preview them in a built-in PlayCanvas viewer.
+Generate explorable 3D worlds (Gaussian splats) from a text prompt, an image, or a 360° panorama using the [SpAItial](https://spaitial.ai) API — then download them, export a mesh, manage your library, and preview them via a hosted viewer link.
 
 As of **0.4.0**, the plugin talks to SpAItial through the **hosted SpAItial MCP server** (`https://mcp.spaitial.ai/mcp`), which supports both header-based keys (Claude Code/Desktop/Cursor) and OAuth login (claude.ai web/mobile). Your API key is entered once — as a connector header or on the OAuth consent screen — and never pasted into the chat.
 
@@ -25,11 +25,11 @@ This plugin turns a single image or a text description into a navigable 3D "worl
 
 | Skill | What it does |
 |-------|--------------|
-| **create-world** | Generate a new world from a text prompt, image URL, local image file, or 360° panorama. Returns a shareable viewer link and thumbnail, optionally downloads the splat, and can open a local PlayCanvas viewer. |
+| **create-world** | Generate a new world from a text prompt, image URL, local image file, or 360° panorama. Returns a shareable hosted viewer link and thumbnail, and optionally downloads the splat. |
 | **manage-worlds** | List your past generations, check job status, rename a world, change its visibility (private / public / listed), or cancel a running job. |
 | **export-mesh** | Turn a finished world into a downloadable `.ply` mesh — full-resolution or simplified for real-time use. |
 
-The plugin also bundles a self-contained **PlayCanvas viewer** (`viewer.html`) that runs in any modern browser with no install, so you can inspect a generated world locally.
+Each completed world includes a **hosted `viewer_url`** that opens in any browser — no download or local setup needed — so you can explore the result immediately (and share it once the world is public).
 
 ## How it connects (MCP, bring-your-own-key)
 

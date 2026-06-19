@@ -9,7 +9,7 @@ description: >
   cancels in-flight jobs via the SpAItial MCP server. Use the companion create-world skill
   to generate new worlds and export-mesh to produce mesh files.
 metadata:
-  version: "0.4.1"
+  version: "0.5.0"
 ---
 
 # Manage Worlds
@@ -46,8 +46,8 @@ returns early when terminal, so **don't busy-poll** — generation takes ~6–10
 Call `get_splat_download_url` or `get_panorama_download_url` (with the `request_id`). Each
 returns a **short-lived (~5 min) pre-signed URL** that needs no key. On open network, download
 it (`curl -L -o world.spz "<signed_url>"`, name the splat to match `splat_format`); in a
-sandboxed environment, just hand the user the link, re-minting it if it expired. To preview a
-`.sog` locally, set up the bundled viewer as described in **create-world** (`assets/viewer.html`).
+sandboxed environment, just hand the user the link, re-minting it if it expired. To view the
+world in 3D, give the user its `viewer_url` (hosted SpAItial viewer — no download needed).
 
 ## Rename / change visibility
 

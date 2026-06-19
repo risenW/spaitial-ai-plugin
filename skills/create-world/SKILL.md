@@ -6,11 +6,11 @@ description: >
   3D scene", "generate a splat from this image", "create a world from a text prompt",
   or "build a world from this 360 panorama". Handles text prompts, image URLs, local
   image files, and equirectangular panoramas; submits the job through the SpAItial MCP
-  server, waits for it to finish, returns the viewer link and thumbnail, downloads the
-  splat, and can open a local PlayCanvas viewer. Triggers on mentions of spaitial,
-  world generation, .spz/.sog splat files, or 3D scene generation from an image.
+  server, waits for it to finish, returns the hosted viewer link and thumbnail, and downloads
+  the splat. Triggers on mentions of spaitial, world generation, .spz/.sog splat files, or 3D
+  scene generation from an image.
 metadata:
-  version: "0.4.1"
+  version: "0.5.0"
 ---
 
 # Create World
@@ -72,7 +72,7 @@ Ask only for what's missing. `create_world` accepts these input shapes:
 
 Also collect (or default sensibly):
 - **title** — short caption (≤200 chars); default something derived from the prompt/file.
-- **output_format** — `sog` if the user wants the bundled PlayCanvas viewer / PlayCanvas
+- **output_format** — `sog` if the user wants PlayCanvas-compatible output / PlayCanvas
   tooling (adds ~25s); otherwise the default `spz`.
 - **visibility** — keep **private** unless the user explicitly asks for public/listed.
 
@@ -122,16 +122,10 @@ pre-signed URL**. That URL needs no API key, so:
   as a direct download link. If it has expired, call `get_splat_download_url` again to mint a
   fresh one. (The link is unauthenticated, so it's safe to hand over.)
 
-### Open the local PlayCanvas viewer (when requested)
-The plugin bundles a self-contained viewer at `assets/viewer.html` (sibling to this file):
-
-1. Generate with `output_format: "sog"` for best compatibility and download it as `world.sog`.
-2. Read `assets/viewer.html` and write a copy into the same folder as `world.sog`.
-3. Present `viewer.html`; tell the user to open it in a browser and **drag `world.sog` onto the
-   page** (loads local splats via the file picker / drag-and-drop, avoiding browser
-   local-file restrictions). Supports `.sog`, `.compressed.ply`, and `.ply`.
-
-Don't try to serve the file over a localhost server from a sandbox — drag-and-drop is reliable.
+### View the world
+To explore the world in 3D, just give the user its **`viewer_url`** (from Step 5) — the hosted
+SpAItial viewer runs in any browser, no download or setup. It works for the owner; share-ready
+once the world is public/listed.
 
 ### Export a mesh / manage the world
 For `.ply` mesh export, hand off to **export-mesh**; for list/rename/visibility/cancel, hand
