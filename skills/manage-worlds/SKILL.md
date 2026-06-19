@@ -9,7 +9,7 @@ description: >
   cancels in-flight jobs via the SpAItial MCP server. Use the companion create-world skill
   to generate new worlds and export-mesh to produce mesh files.
 metadata:
-  version: "0.4.0"
+  version: "0.4.1"
 ---
 
 # Manage Worlds

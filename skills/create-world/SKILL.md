@@ -10,7 +10,7 @@ description: >
   splat, and can open a local PlayCanvas viewer. Triggers on mentions of spaitial,
   world generation, .spz/.sog splat files, or 3D scene generation from an image.
 metadata:
-  version: "0.4.0"
+  version: "0.4.1"
 ---
 
 # Create World
