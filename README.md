@@ -62,7 +62,7 @@ If a tool call returns `401 UNAUTHORIZED`, the key is missing or wrong — re-ch
 Just describe what you want in plain language:
 
 - "Make a 3D world of a cozy sunlit reading nook" → **create-world** (text prompt)
-- **Attach a photo in chat** and say "turn this into a world" → **create-world** (the attached image is sent inline as base64)
+- **Attach a photo in chat** and say "turn this into a world" → **create-world**
 - "Turn this photo into a world: https://… " → **create-world** (image URL)
 - "Build a world from this 360 panorama" (+ attach or link the pano) → **create-world** (`is_pano`)
 - "Show me my recent worlds" / "Make world req_… public" → **manage-worlds**
