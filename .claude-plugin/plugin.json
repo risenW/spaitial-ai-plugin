@@ -1,0 +1,19 @@
+{
+  "name": "spaitial-worlds",
+  "version": "0.3.0",
+  "description": "Generate explorable 3D Gaussian-splat worlds from a text prompt, image, or 360 panorama using the SpAItial API — via the hosted SpAItial MCP server (bring-your-own-key). Create worlds, check status, download splats, export meshes, and manage your library, then preview them in a built-in PlayCanvas viewer.",
+  "author": {
+    "name": "SpAItial"
+  },
+  "homepage": "https://spaitial.ai",
+  "license": "MIT",
+  "keywords": [
+    "spaitial",
+    "3d",
+    "gaussian-splatting",
+    "world-generation",
+    "playcanvas",
+    "splat",
+    "mcp"
+  ]
+}

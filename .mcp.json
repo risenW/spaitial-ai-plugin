@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "spaitial": {
+      "type": "http",
+      "url": "https://mcp.spaitial.ai/mcp",
+      "headers": {
+        "X-Spaitial-Api-Key": "${SPAITIAL_API_KEY}"
+      }
+    }
+  }
+}
