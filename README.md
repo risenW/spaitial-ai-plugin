@@ -42,7 +42,7 @@ Because the connection runs over native remote MCP (not a local process), it wor
 
 ### 1. Get a SpAItial API key
 
-Create an account and an API key at the [SpAItial developers portal](https://developers.spaitial.ai). Keys look like `spt_live_…` (production) or `spt_test_…` (testing — lower rate limits, no GPU billing).
+Create an account and an API key at the [SpAItial developers portal](https://developers.spaitial.ai).
 
 ### 2. Provide the key (once, not in chat)
 
@@ -57,22 +57,21 @@ Enable the **spaitial** connector that ships with this plugin and enter your key
 
 If a tool call returns `401 UNAUTHORIZED`, the key is missing or wrong — re-check the connector config.
 
-> **Billing note:** Each world takes ~5–10 minutes to generate and consumes credits. Text-prompt worlds are charged for both image generation and world generation. Top up at the developers portal.
-
 ## Usage
 
 Just describe what you want in plain language:
 
 - "Make a 3D world of a cozy sunlit reading nook" → **create-world** (text prompt)
+- **Attach a photo in chat** and say "turn this into a world" → **create-world** (the attached image is sent inline as base64)
 - "Turn this photo into a world: https://… " → **create-world** (image URL)
-- "Build a world from the panorama at ./living-room.jpg" → **create-world** (panorama; local files are sent as base64)
+- "Build a world from this 360 panorama" (+ attach or link the pano) → **create-world** (`is_pano`)
 - "Show me my recent worlds" / "Make world req_… public" → **manage-worlds**
 - "Export a mesh of req_…" → **export-mesh**
 
 ## Notes & limitations
 
 - **Downloads return links, not bytes.** `get_splat_download_url`, `get_panorama_download_url`, and `get_mesh_export` return short-lived (~5 min) pre-signed URLs. On open network the skill downloads them for you; in a locked-down sandbox it hands you the link to download in your browser (the link is unauthenticated and safe to open). Re-run the tool if a link expires.
-- **No file upload.** The MCP server has no file-upload tool, so a local image is sent to `create_world` as base64 (≤25 MB). For larger images, host them at an HTTPS URL.
+- **Images go in as base64.** The MCP server has no file-upload tool, so images — whether attached in chat or read from a local path — are sent to `create_world` inline as base64 (≤25 MB decoded). You don't need to host them anywhere. If a photo is larger than ~25 MB, it's downscaled first; only very large images that still won't fit need an HTTPS URL.
 
 ## Privacy & distribution
 

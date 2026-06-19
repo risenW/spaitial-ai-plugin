@@ -54,12 +54,21 @@ Ask only for what's missing. `create_world` accepts these input shapes:
 | A description in words | a text **prompt** | charged for image + world generation |
 | An HTTPS image link | an **image_url** | HTTPS only, ≤25 MB, JPEG/PNG/WebP/GIF |
 | A 360° panorama | the URL/base64 **+ `is_pano: true`** | skips the image-to-pano + suitability stages |
-| A file on their computer | **base64-encode it** and pass as image **base64** | see note below |
+| An image **attached in the chat** | read the attached file → **base64** | most common; see note below |
+| A file on their computer (path) | read it → **base64** | see note below |
 
-> **Local files:** the MCP server exposes **no file-upload tool**, so there's no `file_id`
-> path here. For an image on disk, read it and pass it as a base64 data string to
-> `create_world` (≤25 MB decoded). If it's larger, ask the user to host it at an HTTPS URL
-> instead.
+> **Images from the chat or disk:** the MCP server exposes **no file-upload tool**, so there's
+> no `file_id` path — send the image **inline as base64** via `image_base64` (≤25 MB decoded;
+> JPEG/PNG/WebP/GIF).
+>
+> - **Attached in the conversation:** when the user drops an image into the chat, it's saved to
+>   disk (in Cowork, under the session's uploads folder). Locate that file, base64-encode its
+>   bytes, and pass the string to `create_world`. Don't ask the user to re-host or paste a URL —
+>   the attachment is enough.
+> - **Local path:** same flow for any file path the user gives.
+> - **Too big?** If a photo exceeds ~25 MB, downscale/recompress it first (e.g. `sips`,
+>   `ffmpeg`, or Pillow) and send the smaller version. Only fall back to asking for an HTTPS URL
+>   if it still won't fit.
 
 Also collect (or default sensibly):
 - **title** — short caption (≤200 chars); default something derived from the prompt/file.
