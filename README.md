@@ -1,6 +1,6 @@
 # SpAItial AI
 
-Generate explorable 3D worlds (Gaussian splats) from a text prompt, an image, or a 360° panorama using the [SpAItial](https://spaitial.ai) API — then download them, export a mesh, manage your library, and preview them via a hosted viewer link.
+Generate explorable 3D worlds (Gaussian splats) from a text prompt, an image, or a 360° panorama using the [SpAItial](https://spaitial.ai) API — then edit worlds through the panorama edit loop, download results, export a mesh, manage your library, and preview everything via hosted viewer links.
 
 As of **0.4.0**, the plugin talks to SpAItial through the **hosted SpAItial MCP server** (`https://mcp.spaitial.ai/mcp`), which supports both header-based keys (Claude Code/Desktop/Cursor) and OAuth login (claude.ai web/mobile). Your API key is entered once — as a connector header or on the OAuth consent screen — and never pasted into the chat.
 
@@ -19,13 +19,14 @@ After installing, open the **spaitial** connector's settings and paste your SpAI
 
 ## What it does
 
-This plugin turns a single image or a text description into a navigable 3D "world" — a Gaussian splat you can orbit, pan, and zoom. It handles the full SpAItial workflow for you: submitting the job, waiting for generation, fetching the result, and delivering the files.
+This plugin turns a single image or a text description into a navigable 3D "world" — a Gaussian splat you can orbit, pan, and zoom. It also edits existing API-created worlds by editing their panoramas, iterating on `pano_...` artifacts, and creating a new world from the accepted edit. It handles the full SpAItial workflow for you: submitting jobs, waiting for generation, fetching results, and delivering files.
 
 ## Components
 
 | Skill | What it does |
 |-------|--------------|
 | **create-world** | Generate a new world from a text prompt, image URL, local image file, or 360° panorama. Returns a shareable hosted viewer link and thumbnail, and optionally downloads the splat. |
+| **edit-world** | Edit an API-created world panorama with a prompt and optional reference images, iterate on `pano_...`, then create a new world from the final panorama. |
 | **manage-worlds** | List your past generations, check job status, rename a world, change its visibility (private / public / listed), or cancel a running job. |
 | **export-mesh** | Turn a finished world into a downloadable `.ply` mesh — full-resolution or simplified for real-time use. |
 
@@ -47,7 +48,7 @@ The plugin declares one MCP server in `.mcp.json`:
 }
 ```
 
-With header clients (Code/Desktop/Cursor) the hosted server is **stateless and holds no credentials** — it forwards your key to `api.spaitial.ai` on each request, and you're billed to your own SpAItial account. With claude.ai web/mobile it uses OAuth and stores your key **encrypted** (retrievable only via your issued token). Either way it exposes these tools: `list_models`, `create_world`, `get_world_status`, `get_world`, `list_world_requests`, `get_splat_download_url`, `get_panorama_download_url`, `update_world`, `cancel_world`, `start_mesh_export`, `get_mesh_export`.
+With header clients (Code/Desktop/Cursor) the hosted server is **stateless and holds no credentials** — it forwards your key to `api.spaitial.ai` on each request, and you're billed to your own SpAItial account. With claude.ai web/mobile it uses OAuth and stores your key **encrypted** (retrievable only via your issued token). Either way it exposes these tools: `list_models`, `create_world`, `edit_panorama`, `list_panoramas`, `get_panorama`, `get_panorama_download_url`, `get_world_status`, `get_world`, `list_world_requests`, `get_splat_download_url`, `get_panorama_download_url`, `update_world`, `cancel_world`, `start_mesh_export`, `get_mesh_export`.
 
 Because the connection runs over native remote MCP (not a local process), it works in sandboxed environments like Cowork without any network workaround.
 
@@ -81,6 +82,8 @@ Just describe what you want in plain language:
 - **Attach a photo in chat** and say "turn this into a world" → **create-world**
 - "Turn this photo into a world: https://… " → **create-world** (image URL)
 - "Build a world from this 360 panorama" (+ attach or link the pano) → **create-world** (`is_pano`)
+- "Edit this world: make the rug yellow" / "Add this attached sofa to the room" → **edit-world**
+- "Create a world from this edited pano_…" → **edit-world** or **create-world** (`panorama_id`)
 - "Show me my recent worlds" / "Make world req_… public" → **manage-worlds**
 - "Export a mesh of req_…" → **export-mesh**
 

@@ -1,7 +1,7 @@
 {
   "name": "spaitial-ai",
   "version": "0.5.0",
-  "description": "Generate explorable 3D Gaussian-splat worlds from a text prompt, image, or 360 panorama using the SpAItial API — via the hosted SpAItial MCP server (bring-your-own-key). Create worlds, check status, download splats, export meshes, and manage your library, then preview them via a hosted viewer link.",
+  "description": "Generate and edit explorable 3D Gaussian-splat worlds from a text prompt, image, 360 panorama, or iterative pano edit using the SpAItial API — via the hosted SpAItial MCP server (bring-your-own-key). Create worlds, edit panoramas, check status, download splats, export meshes, and manage your library, then preview them via hosted viewer links.",
   "author": {
     "name": "SpAItial"
   },

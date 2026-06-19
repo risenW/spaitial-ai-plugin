@@ -12,7 +12,8 @@ Authorization: Bearer spt_live_<…>   # or spt_test_<…>
 
 Scopes by endpoint: `worlds:create` (POST /v1/worlds), `worlds:read` (all GETs),
 `worlds:write` (PATCH, cancel, exports POST), `files:create` (POST /v1/files),
-`files:read` (GET /v1/files).
+`files:read` (GET /v1/files). Panorama edits use `worlds:create`; reading edited
+panoramas uses `worlds:read`.
 
 ## Endpoints
 
@@ -30,6 +31,10 @@ GET    /v1/worlds/requests/:id/exports/:type          Export status (READY -> do
 GET    /v1/worlds/requests/:id/exports                List export statuses
 POST   /v1/files                                      Upload an input file -> file_id
 GET    /v1/files                                       List uploads
+POST   /v1/panoramas/edit                             Edit world/request/panorama -> pano_...
+GET    /v1/panoramas                                  List edited panoramas
+GET    /v1/panoramas/:id                              Get edited panorama metadata
+GET    /v1/panoramas/:id/download                     302 -> signed edited-panorama URL
 GET    /v1/models                                      List generation models
 ```
 
@@ -49,7 +54,7 @@ GET    /v1/models                                      List generation models
 
 | Field | Default | Notes |
 |-------|---------|-------|
-| `input.type` | — | `url` \| `base64` \| `file_id` \| `text` (discriminated) |
+| `input.type` | — | `url` \| `base64` \| `file_id` \| `text` \| `panorama_id` (discriminated) |
 | `model` | account default | `GET /v1/models` to list (`default`, `experimental`, …) |
 | `title` | unset | ≤200 chars |
 | `output_format` | `spz` | `spz` (default) or `sog` (PlayCanvas-optimized, +~25s) |
@@ -67,10 +72,47 @@ GET    /v1/models                                      List generation models
 { "input": { "type": "base64",  "image_base64": "data:image/png;base64,iVBOR..." } }
 { "input": { "type": "file_id", "file_id": "file_...", "is_pano": false } }
 { "input": { "type": "text",    "prompt": "a cozy sunlit reading nook with bookshelves" } }
+{ "input": { "type": "panorama_id", "panorama_id": "pano_..." } }
 ```
 
 `is_pano:true` tells the API the image is an equirectangular 360° panorama; it starts after the
 image-to-panorama stage and skips suitability validation. Content moderation still applies.
+
+`panorama_id` starts from an edited panorama returned by `POST /v1/panoramas/edit`. Generation
+starts at pano2video, keeps lineage to the source world, and can be reused until the panorama
+expires.
+
+## Panorama editing
+
+Edit the panorama behind an API-created world, iterate until satisfied, then create a new world:
+
+```json
+{
+  "source": { "type": "world_id", "world_id": "<world-uuid>" },
+  "prompt": "change the rug and chair to yellow",
+  "images": [{ "type": "url", "image_url": "https://example.com/reference.jpg" }]
+}
+```
+
+`source.type` is `request_id`, `world_id`, or `panorama_id`. `world_id` / `request_id` must
+refer to an API-created completed world owned by the same user; it may have been created by a
+different API key. `panorama_id` iterates on a previous edit artifact.
+
+`images` is optional and accepts at most 3 references (`url`, `base64`, or `file_id`). There is
+no aspect-ratio field; the API keeps the output as a panorama suitable for world generation.
+
+Response:
+
+```json
+{
+  "panorama_id": "pano_...",
+  "status": "READY",
+  "panorama_url": "https://api.spaitial.ai/v1/panoramas/pano_.../download",
+  "parent_panorama_id": null,
+  "consumed": false,
+  "expires_at": "2026-06-20T12:00:00Z"
+}
+```
 
 ### Idempotency
 Send `Idempotency-Key: <uuid>` to retry a POST safely. Same key + same body -> cached response;

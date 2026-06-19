@@ -25,7 +25,8 @@ deliver the result. Background on field meanings, statuses, and error codes live
 This plugin talks to SpAItial through MCP tools, not raw HTTP. When the `spaitial` connector
 is enabled you'll have these tools (names as exposed by the server):
 
-`list_models`, `create_world`, `get_world_status`, `get_world`, `list_world_requests`,
+`list_models`, `create_world`, `edit_panorama`, `list_panoramas`, `get_panorama`,
+`get_panorama_download_url`, `get_world_status`, `get_world`, `list_world_requests`,
 `get_splat_download_url`, `get_panorama_download_url`, `update_world`, `cancel_world`,
 `start_mesh_export`, `get_mesh_export`.
 
@@ -54,6 +55,7 @@ Ask only for what's missing. `create_world` accepts these input shapes:
 | A description in words | a text **prompt** | charged for image + world generation |
 | An HTTPS image link | an **image_url** | HTTPS only, ≤25 MB, JPEG/PNG/WebP/GIF |
 | A 360° panorama | the URL/base64 **+ `is_pano: true`** | skips the image-to-pano + suitability stages |
+| A `pano_…` from an edit | **`panorama_id`** | skips image-to-pano; use after the edit-world loop |
 | An image **attached in the chat** | read the attached file → **base64** | most common; see note below |
 | A file on their computer (path) | read it → **base64** | see note below |
 
@@ -128,8 +130,10 @@ SpAItial viewer runs in any browser, no download or setup. It works for the owne
 once the world is public/listed.
 
 ### Export a mesh / manage the world
-For `.ply` mesh export, hand off to **export-mesh**; for list/rename/visibility/cancel, hand
-off to **manage-worlds**. Both reuse the same `request_id`.
+For app-style world edits ("change this room", "add this object", "iterate on this world"),
+hand off to **edit-world**. For `.ply` mesh export, hand off to **export-mesh**; for
+list/rename/visibility/cancel, hand off to **manage-worlds**. These reuse the relevant
+`request_id`, world `id`, or `pano_...`.
 
 ## Notes
 - The `request_id` (the operation) and the world `id` (the artifact) are different IDs — use
