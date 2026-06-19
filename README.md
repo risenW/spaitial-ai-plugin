@@ -1,4 +1,4 @@
-# SpAItial Worlds
+# SpAItial AI
 
 Generate explorable 3D worlds (Gaussian splats) from a text prompt, an image, or a 360° panorama using the [SpAItial](https://spaitial.ai) API — then download them, export a mesh, manage your library, and preview them in a built-in PlayCanvas viewer.
 

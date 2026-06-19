@@ -6,7 +6,7 @@
   "description": "SpAItial plugins for Claude — generate, manage, and export explorable 3D Gaussian-splat worlds via the hosted SpAItial MCP server.",
   "plugins": [
     {
-      "name": "spaitial-worlds",
+      "name": "spaitial-ai",
       "source": "./",
       "description": "Generate explorable 3D Gaussian-splat worlds from a text prompt, image, or 360 panorama using the SpAItial MCP server — then download splats, export meshes, manage your library, and preview them in a built-in PlayCanvas viewer.",
       "author": {
