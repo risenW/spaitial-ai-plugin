@@ -4,6 +4,19 @@ Generate explorable 3D worlds (Gaussian splats) from a text prompt, an image, or
 
 As of **0.3.0**, the plugin talks to SpAItial through the **hosted SpAItial MCP server** (`https://mcp.spaitial.ai/mcp`) instead of making raw HTTP calls. Your API key is entered once in Claude's connector configuration and sent as a request header — never pasted into the chat.
 
+## Install
+
+In Claude Code (or the `/plugin` command in any Claude client):
+
+```shell
+/plugin marketplace add risenW/spaitial-ai-plugin
+/plugin install spaitial-ai@spaitial-ai
+```
+
+Or in the Claude app: **Customize → Plugins → Add marketplace → from a repository**, enter `risenW/spaitial-ai-plugin`, then click **Install** on **spaitial-ai**.
+
+After installing, open the **spaitial** connector's settings and paste your SpAItial API key (`spt_live_…` or `spt_test_…`, from the [developers portal](https://developers.spaitial.ai)) — it's stored by Claude and sent as a header, never in the chat. See [Setup](#setup) for details.
+
 ## What it does
 
 This plugin turns a single image or a text description into a navigable 3D "world" — a Gaussian splat you can orbit, pan, and zoom. It handles the full SpAItial workflow for you: submitting the job, waiting for generation, fetching the result, and delivering the files.
