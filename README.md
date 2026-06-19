@@ -9,11 +9,11 @@ As of **0.4.0**, the plugin talks to SpAItial through the **hosted SpAItial MCP 
 In Claude Code (or the `/plugin` command in any Claude client):
 
 ```shell
-/plugin marketplace add risenW/spaitial-ai-plugin
+/plugin marketplace add spaitial-ai/spaitial-ai-plugin
 /plugin install spaitial-ai@spaitial-ai
 ```
 
-Or in the Claude app: **Customize → Plugins → Add marketplace → from a repository**, enter `risenW/spaitial-ai-plugin`, then click **Install** on **spaitial-ai**.
+Or in the Claude app: **Customize → Plugins → Add marketplace → from a repository**, enter `spaitial-ai/spaitial-ai-plugin`, then click **Install** on **spaitial-ai**.
 
 After installing, open the **spaitial** connector's settings and paste your SpAItial API key (`spt_live_…` or `spt_test_…`, from the [developers portal](https://developers.spaitial.ai)) — it's stored by Claude and sent as a header, never in the chat. See [Setup](#setup) for details.
 
