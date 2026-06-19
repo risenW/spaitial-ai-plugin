@@ -10,7 +10,7 @@ description: >
   splat, and can open a local PlayCanvas viewer. Triggers on mentions of spaitial,
   world generation, .spz/.sog splat files, or 3D scene generation from an image.
 metadata:
-  version: "0.3.0"
+  version: "0.4.0"
 ---
 
 # Create World
@@ -87,11 +87,18 @@ If the call errors, read the error envelope and explain it (e.g. `INSUFFICIENT_C
 
 ## Step 4 — Wait for generation
 
-Poll `get_world_status` with the `request_id` roughly every ~15s until the status is terminal
-(`COMPLETED`, `FAILED`, or `CANCELLED`). Don't loop forever — if it's still running after a
-long while, tell the user it's still processing and they can re-check later with the
-**manage-worlds** skill using the `request_id`. On `FAILED`/`CANCELLED`, call `get_world` for
-the reason and offer to retry (a retry is a fresh `create_world`).
+Generation is **takes a few minutes**: standard models take ~6–10 minutes, HQ models up to ~60 minutes. **Do not
+busy-poll.** Call `get_world_status` with `wait_seconds: 90` — the server holds the request and
+returns early the moment the status is terminal, so each call is ~90s of waiting in a single
+tool round-trip. Just repeat the call until the status is `COMPLETED`, `FAILED`, or `CANCELLED`.
+
+- One `get_world_status` call ≈ 90s. A standard world is ~5–7 calls; an HQ world is dozens —
+  that's expected, and far cheaper than polling every few seconds.
+- Use `wait_seconds: 0` (or omit) only for a quick one-off status check.
+- Don't loop forever — if it's still running after a long while (or the user steps away), tell
+  them it's still processing and they can re-check later with the **manage-worlds** skill using
+  the `request_id`. On `FAILED`/`CANCELLED`, call `get_world` for the reason and offer to retry
+  (a retry is a fresh `create_world`).
 
 ## Step 5 — Fetch the result
 

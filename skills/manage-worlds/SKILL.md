@@ -9,7 +9,7 @@ description: >
   cancels in-flight jobs via the SpAItial MCP server. Use the companion create-world skill
   to generate new worlds and export-mesh to produce mesh files.
 metadata:
-  version: "0.3.0"
+  version: "0.4.0"
 ---
 
 # Manage Worlds
@@ -33,11 +33,13 @@ Call `list_world_requests` (supports `limit` / `offset`). Present a compact tabl
 
 ## Check status of one job
 
-- Quick check: `get_world_status` (returns `status` + coarse `progress`).
+- Quick check: `get_world_status` with `wait_seconds: 0` (instant; returns `status` + coarse `progress`).
 - Full details (URLs, validation issues): `get_world`.
 
-If the user is waiting on a running job, poll `get_world_status` every ~15s until `COMPLETED`,
-`FAILED`, or `CANCELLED`.
+If the user is waiting on a running job, call `get_world_status` with `wait_seconds: 90` and
+repeat until `COMPLETED`, `FAILED`, or `CANCELLED`. The server holds each call up to 90s and
+returns early when terminal, so **don't busy-poll** — generation takes ~6–10 min (standard) to
+~1 hour (HQ).
 
 ## Download an existing splat or panorama
 
