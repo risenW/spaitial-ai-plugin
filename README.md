@@ -2,7 +2,7 @@
 
 Generate explorable 3D worlds (Gaussian splats) from a text prompt, an image, or a 360° panorama using the [SpAItial](https://spaitial.ai) API — then download them, export a mesh, manage your library, and preview them in a built-in PlayCanvas viewer.
 
-As of **0.3.0**, the plugin talks to SpAItial through the **hosted SpAItial MCP server** (`https://mcp.spaitial.ai/mcp`) instead of making raw HTTP calls. Your API key is entered once in Claude's connector configuration and sent as a request header — never pasted into the chat.
+As of **0.4.0**, the plugin talks to SpAItial through the **hosted SpAItial MCP server** (`https://mcp.spaitial.ai/mcp`), which supports both header-based keys (Claude Code/Desktop/Cursor) and OAuth login (claude.ai web/mobile). Your API key is entered once — as a connector header or on the OAuth consent screen — and never pasted into the chat.
 
 ## Install
 
